@@ -96,5 +96,29 @@ jobs:
       - name: Upload Consolidate Audit log
         uses: actions/upload-artifact@v4
         with:
-            name: audit-logs
-            path: audit-logs.log
+          name: audit-logs
+          path: audit-logs.log
+
+  send-email:
+    name: Send Email Notification
+    runs-on: ubuntu-latest
+    needs: consolidate-logs
+    steps:
+      - name: Prompt for email input
+        id: get_email
+        run: |
+          echo "Enter recipient email address:"
+          read email
+          echo "EMAIL=$email" >> $GITHUB_ENV
+
+      - name: Download Consolidate Audit Log
+        uses: actions/download-artifact@v4
+        with:
+          name: audit-logs
+          path: .
+
+      - name: Simulate Email Sending
+        run: |
+          echo "📧 Simulating email sending ...."
+          echo "To: ${{ env.EMAIL }}"
+          echo "From: GitHub Actions <hello@poolcamacho.dev>"
